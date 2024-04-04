@@ -1,11 +1,10 @@
-import tensorflow as tf
 import mlflow
-from src.utils.constant import batch_size, validation_split, verbose, epochs, artifact_location, experiment_tags, \
-    experiment_description
+import tensorflow as tf
+from mlflow import MlflowClient
 from mlflow.data.numpy_dataset import NumpyDataset
 from mlflow.models import infer_signature
-from mlflow import MlflowClient
-import matplotlib.pyplot as plt
+
+from src.utils.constant import batch_size, validation_split, verbose, epochs, artifact_location, experiment_tags
 
 
 class MnistNeuralNetwork:
@@ -54,7 +53,7 @@ class MnistNeuralNetwork:
             )
 
         # autologging
-        # mlflow.autolog()
+        mlflow.autolog()
 
         description = "Integrate mlflow with Tensorflow and explore the full range of available features."
         with mlflow.start_run(run_name="tensorflow-mlflow", description=description,
@@ -76,16 +75,6 @@ class MnistNeuralNetwork:
                 }
             )
 
-            # for nested training
-            # with mlflow.start_run(run_name="tensorflow-mlflow-child"):
-
-            # mlflow.log_artifacts(local_dir="./run_artifacts", artifact_path="run_artifacts")
-            #
-            # # log the images
-            # fig_ = plt.figure()
-            # plt.title("test image")
-            # mlflow.log_figure(fig_, "img.png")
-            #
             model = obj.model_fit(x_train, y_train, model)
             test_loss, test_acc = model.evaluate(x_test, y_test)
             mlflow.log_metrics(
